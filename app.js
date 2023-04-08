@@ -89,7 +89,6 @@ async function createPlaylist(accessToken, userId, tracks) {
 
     const userProfile = await userProfileResponse.json();
     const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-    
-    // Open the generated playlist in a new window
-    window.open(playlistUrl, '_blank');
+    window.location.href = playlistUrl;
   });
+})();
