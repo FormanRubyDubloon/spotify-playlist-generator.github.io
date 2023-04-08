@@ -48,7 +48,6 @@ async function createPlaylist(accessToken, userId, tracks) {
   const playlist = await playlistResponse.json();
   const uris = tracks.map(trackId => `spotify:track:${trackId}`);
 
-
   await fetch(`${apiBaseUrl}/playlists/${playlist.id}/tracks`, {
     method: 'POST',
     headers: headers,
@@ -56,6 +55,21 @@ async function createPlaylist(accessToken, userId, tracks) {
   });
 
   return playlist.external_urls.spotify;
+}
+
+async function createTextPlaylist(accessToken, trackList, trackIds) {
+  let textPlaylistContent = '';
+
+  for (const track of trackList) {
+    const trackId = await searchTrack(accessToken, track.artist, track.title);
+    if (trackId) {
+      textPlaylistContent += `${track.artist} - ${track.title}\n`;
+    }
+  }
+
+  const textPlaylistDiv = document.getElementById('textPlaylist');
+  textPlaylistDiv.innerText = textPlaylistContent;
+  textPlaylistDiv.style.display = 'block';
 }
 
 (async () => {
@@ -69,29 +83,32 @@ async function createPlaylist(accessToken, userId, tracks) {
   document.getElementById('authenticate').style.display = 'none';
   document.getElementById('fileSelection').style.display = 'block';
 
-document.getElementById('generatePlaylist').addEventListener('click', async () => {
-  const fileInput = document.getElementById('csvFile');
-  const file = fileInput.files[0];
-  if (!file) return;
+  document.getElementById('generatePlaylist').addEventListener('click', async () => {
+    const fileInput = document.getElementById('csvFile');
+    const file = fileInput.files[0];
+    if (!file) return;
 
-  const trackList = await parseCSV(file);
-  const trackIds = [];
+    const trackList = await parseCSV(file);
+    const trackIds = [];
 
-  for (const track of trackList) {
-    const trackId = await searchTrack(accessToken, track.artist, track.title);
-    if (trackId) {
-      trackIds.push(trackId);
+    for (const track of trackList) {
+      const trackId = await searchTrack(accessToken, track.artist, track.title);
+      if (trackId) {
+        trackIds.push(trackId);
+      }
     }
-  }
 
-  const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
-    headers: { 'Authorization': `Bearer ${accessToken}` },
+    const userProfileResponse = await fetch('https://api.spotify.com/v1/me',
+          headers: { 'Authorization': `Bearer ${accessToken}` },
   });
 
   const userProfile = await userProfileResponse.json();
   const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-  
+
+  // Call the createTextPlaylist function to render the text playlist
+  await createTextPlaylist(accessToken, trackList, trackIds);
+
   // Open the generated playlist in a new window
   window.open(playlistUrl, '_blank');
-});
 })();
+
