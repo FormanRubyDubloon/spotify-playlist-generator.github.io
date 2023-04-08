@@ -94,3 +94,4 @@ document.getElementById('generatePlaylist').addEventListener('click', async () =
   // Open the generated playlist in a new window
   window.open(playlistUrl, '_blank');
 });
+})();
