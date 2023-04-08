@@ -1,0 +1,16 @@
+{
+  "name": "spotify-playlist-generator.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "papaparse": "^5.4.1",
+    "spotify-web-api-js": "^1.5.2"
+  }
+}
