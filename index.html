@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spotify Playlist Generator</title>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-  <meta http-equiv="Permissions-Policy" content="interest-cohort=()"/>
-
 </head>
 <body>
   <h1>Spotify Playlist Generator</h1>
-  <p>Select a CSV file containing your playlist data:</p>
-  <input type="file" id="csvFile" accept=".csv">
-  <button id="generatePlaylist">Generate Playlist</button>
+  <button id="authenticate">Authenticate with Spotify</button>
+  <div id="fileSelection" style="display:none;">
+    <p>Select a CSV file containing your playlist data:</p>
+    <input type="file" id="csvFile" accept=".csv">
+    <button id="generatePlaylist">Generate Playlist</button>
+  </div>
   <script src="app.js"></script>
 </body>
 </html>

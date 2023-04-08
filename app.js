@@ -2,12 +2,12 @@ const clientId = '5a5cb54595bf495f805181938026b529';
 const redirectUri = 'https://yourusername.github.io/yourrepositoryname.github.io/callback';
 const scopes = 'playlist-modify-public';
 
-function onGeneratePlaylistButtonClick() {
+function onAuthenticateButtonClick() {
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
   window.location.href = authUrl;
 }
 
-document.getElementById('generatePlaylist').addEventListener('click', onGeneratePlaylistButtonClick);
+document.getElementById('authenticate').addEventListener('click', onAuthenticateButtonClick);
 
 function parseCSV(file) {
   return new Promise((resolve) => {
@@ -52,11 +52,13 @@ async function createPlaylist(accessToken, userId, tracks) {
   const accessToken = params.get('access_token');
   if (!accessToken) return;
 
-  // Hide the "Generate Playlist" button after authentication
-  document.getElementById('generatePlaylist').style.display = 'none';
+  // Hide the "Authenticate" button and show the "File Selection" after authentication
+  document.getElementById('authenticate').style.display = 'none';
+  document.getElementById('fileSelection').style.display = 'block';
 
-  document.getElementById('csvFile').addEventListener('change', async (e) => {
-    const file = e.target.files[0];
+  document.getElementById('generatePlaylist').addEventListener('click', async () => {
+    const fileInput = document.getElementById('csvFile');
+    const file = fileInput.files[0];
     if (!file) return;
 
     const tracks = await parseCSV(file);
@@ -69,3 +71,4 @@ async function createPlaylist(accessToken, userId, tracks) {
     window.location.href = playlistUrl;
   });
 })();
+
