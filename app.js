@@ -98,17 +98,17 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
       }
     }
 
-    const userProfileResponse = await fetch('https://api.spotify.com/v1/me',
-          headers: { 'Authorization': `Bearer ${accessToken}` },
-  });
+    const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+    });
 
-  const userProfile = await userProfileResponse.json();
-  const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
+    const userProfile = await userProfileResponse.json();
+    const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
 
-  // Call the createTextPlaylist function to render the text playlist
-  await createTextPlaylist(accessToken, trackList, trackIds);
+    // Call the createTextPlaylist function to render the text playlist
+    await createTextPlaylist(accessToken, trackList, trackIds);
 
-  // Open the generated playlist in a new window
-  window.open(playlistUrl, '_blank');
+    // Open the generated playlist in a new window
+    window.open(playlistUrl, '_blank');
+  })();
 })();
-
