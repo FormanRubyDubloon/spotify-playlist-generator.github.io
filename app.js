@@ -1,5 +1,5 @@
 const clientId = '5a5cb54595bf495f805181938026b529';
-const redirectUri = 'https://yourusername.github.io/yourrepositoryname.github.io/callback';
+const redirectUri = 'https://FormanRubyDubloon.github.io/spotify-playlist-generator.github.io/callback';
 const scopes = 'playlist-modify-public';
 
 function onAuthenticateButtonClick() {
