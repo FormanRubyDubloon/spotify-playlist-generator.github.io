@@ -46,7 +46,8 @@ async function createPlaylist(accessToken, userId, tracks) {
   });
 
   const playlist = await playlistResponse.json();
-  const uris = tracks.map(track => `spotify:track:${track}`);
+  const uris = tracks.map(trackId => `spotify:track:${trackId}`);
+
 
   await fetch(`${apiBaseUrl}/playlists/${playlist.id}/tracks`, {
     method: 'POST',
