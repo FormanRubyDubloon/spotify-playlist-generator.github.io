@@ -6,17 +6,22 @@
   <title>Spotify Playlist Generator</title>
 </head>
 <body>
-  <h1>Spotify Playlist Generator 2.3.2</h1>
+  <h1>Spotify Playlist Generator 3.0.0</h1>
   <button id="authenticate">Authenticate with Spotify</button>
+
+
   <div id="fileSelection" style="display: none;">
-    <input type="file" id="csvFile" accept=".csv">
+    <h2>Enter prompt:</h2>
+    <textarea id="gptChatInput" rows="10" cols="50" placeholder="Enter your conversation here..."></textarea>
+    <br />
     <button id="generatePlaylist">Generate Playlist</button>
+    <div id="textPlaylist"></div>
   </div>
+
   
   <!-- Add a new element for displaying the playlist text -->
   <div id="textPlaylist" style="display: none;"></div>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
