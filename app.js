@@ -9,25 +9,22 @@ function onAuthenticateButtonClick() {
 
 document.getElementById('authenticate').addEventListener('click', onAuthenticateButtonClick);
 
-
 async function fetchGptSuggestions(prompt) {
-  const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+  const response = await fetch('https://4bru83i736.execute-api.us-east-1.amazonaws.com/prod/gpt-suggestions', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer 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',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      prompt: prompt,
-      max_tokens: 100,
-      n: 1,
-      stop: null,
-      temperature: 0.7,
-    }),
+    body: JSON.stringify({ prompt }),
   });
 
   const data = await response.json();
-  return data.choices[0].text;
+  return data;
+}
+
+function extractTrackListFromGptSuggestion(gptSuggestion) {
+  // You need to implement this function to extract the song titles and artists
+  // from the GPT suggestions, depending on the format of your GPT suggestions
 }
 
 async function searchTrack(accessToken, artist, title) {
@@ -68,18 +65,19 @@ async function createPlaylist(accessToken, userId, tracks) {
 }
 
 async function createTextPlaylist(accessToken, trackList, trackIds) {
-  let textPlaylistContent = '';
+  const playlistElement = document.getElementById('textPlaylist');
+  playlistElement.innerHTML = '';
 
-  for (const track of trackList) {
-    const trackId = await searchTrack(accessToken, track.artist, track.title);
-    if (trackId) {
-      textPlaylistContent += `${track.artist} - ${track.title}\n`;
-    }
+  for (const trackId of trackIds) {
+    const trackResponse = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+    });
+
+    const track = await trackResponse.json();
+    const listItem = document.createElement('li');
+    listItem.textContent = `${track.name} - ${track.artists[0].name}`;
+    playlistElement.appendChild(listItem);
   }
-
-  const textPlaylistDiv = document.getElementById('textPlaylist');
-  textPlaylistDiv.innerText = textPlaylistContent;
-  textPlaylistDiv.style.display = 'block';
 }
 
 (async () => {
@@ -93,37 +91,32 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
   document.getElementById('authenticate').style.display = 'none';
   document.getElementById('fileSelection').style.display = 'block';
 
-document.getElementById('generatePlaylist').addEventListener('click', async () => {
-  const chatInput = document.getElementById('gptChatInput').value;
-  if (!chatInput) return;
+  document.getElementById('submitChatInput').addEventListener('click', async () => {
+    const chatInput = document.getElementById('chatInput').value.trim();
+    if (!chatInput) return;
 
-  const gptSuggestions = await fetchGptSuggestions(chatInput);
-  const lines = gptSuggestions.split('\n').filter(line => line.trim());
+    const gptSuggestions = await fetchGptSuggestions(chatInput);
+    const trackList = extractTrackListFromGptSuggestion(gptSuggestions);
+    const trackIds = [];
 
-  const trackList = lines.map(line => {
-    const [artist, title] = line.split('-').map(s => s.trim());
-    return { artist, title };
-  });
-
-  const trackIds = [];
-
-  for (const track of trackList) {
-    const trackId = await searchTrack(accessToken, track.artist, track.title);
-    if (trackId) {
-      trackIds.push(trackId);
+    for (const track of trackList) {
+      const trackId = await searchTrack(accessToken, track.artist, track.title);
+      if (trackId) {
+        trackIds.push(trackId);
+      }
     }
-  }
 
-  const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
-    headers: { 'Authorization': `Bearer ${accessToken}` },
+    const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+    });
+
+    const userProfile = await userProfileResponse.json();
+    const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
+
+    // Call the createTextPlaylist function to render the text playlist
+    await createTextPlaylist(accessToken, trackList, trackIds);
+
+    // Open the generated playlist in a new window
+    window.open(playlistUrl, '_blank');
   });
-
-  const userProfile = await userProfileResponse.json();
-  const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-
-  await createTextPlaylist(accessToken, trackList, trackIds);
-
-  window.open(playlistUrl, '_blank');
-});
-
 })();
