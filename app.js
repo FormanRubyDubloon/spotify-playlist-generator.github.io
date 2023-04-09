@@ -22,10 +22,26 @@ async function fetchGptSuggestions(prompt) {
   return data;
 }
 
-function extractTrackListFromGptSuggestion(gptSuggestion) {
-  // You need to implement this function to extract the song titles and artists
-  // from the GPT suggestions, depending on the format of your GPT suggestions
+function extractTrackListFromGptSuggestion(suggestion) {
+  const lines = suggestion.split('\n');
+  const trackList = [];
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+
+    if (!trimmedLine) continue;
+
+    const match = trimmedLine.match(/^(.+?) - (.+)$/);
+    if (match) {
+      const artist = match[1].trim();
+      const title = match[2].trim();
+      trackList.push({ artist, title });
+    }
+  }
+
+  return trackList;
 }
+
 
 async function searchTrack(accessToken, artist, title) {
   const query = encodeURIComponent(`artist:${artist} track:${title}`);
@@ -82,7 +98,14 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
 
 (async () => {
   const urlHash = window.location.hash.substring(1);
-  if (!urlHash) return;
+  if (!urlHash) {
+    document.getElementById('authenticate').style.display = 'block';
+    document.getElementById('fileSelection').style.display = 'none';
+  } else {
+    document.getElementById('authenticate').style.display = 'none';
+    document.getElementById('fileSelection').style.display = 'block';
+  }
+
 
   const params = new URLSearchParams(urlHash);
   const accessToken = params.get('access_token');
