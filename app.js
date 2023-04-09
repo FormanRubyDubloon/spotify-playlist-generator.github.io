@@ -98,6 +98,7 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
 
 (async () => {
   const urlHash = window.location.hash.substring(1);
+  
   if (!urlHash) {
     document.getElementById('authenticate').style.display = 'block';
     document.getElementById('fileSelection').style.display = 'none';
@@ -106,10 +107,14 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
     document.getElementById('fileSelection').style.display = 'block';
   }
 
-
   const params = new URLSearchParams(urlHash);
   const accessToken = params.get('access_token');
-  if (!accessToken) return;
+
+  if (!accessToken) {
+    document.getElementById('authenticate').style.display = 'block';
+    document.getElementById('fileSelection').style.display = 'none';
+    return;
+  }
 
   document.getElementById('authenticate').style.display = 'none';
   document.getElementById('fileSelection').style.display = 'block';
