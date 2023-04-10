@@ -42,6 +42,16 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
+async function displayTextTracklist(trackList) {
+  const tracklistElement = document.getElementById('textTracklist');
+  tracklistElement.innerHTML = '';
+
+  for (const track of trackList) {
+    const listItem = document.createElement('li');
+    listItem.textContent = `${track.artist} - ${track.title}`;
+    tracklistElement.appendChild(listItem);
+  }
+}
 
 async function searchTrack(accessToken, artist, title) {
   const query = encodeURIComponent(`artist:${artist} track:${title}`);
@@ -80,28 +90,9 @@ async function createPlaylist(accessToken, userId, tracks) {
   return playlist.external_urls.spotify;
 }
 
-async function createTextPlaylist(accessToken, trackList, trackIds) {
-  const playlistElement = document.getElementById('textPlaylist');
-  playlistElement.innerHTML = '';
-
-  for (const trackId of trackIds) {
-    const trackResponse = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
-      headers: { 'Authorization': `Bearer ${accessToken}` },
-    });
-
-    const track = await trackResponse.json();
-    const listItem = document.createElement('li');
-    listItem.textContent = `${track.name} - ${track.artists[0].name}`;
-    playlistElement.appendChild(listItem);
-  }
-}
-
 (async () => {
   const urlHash = window.location.hash.substring(1);
-  const params = new URLSearchParams(urlHash);
-  const accessToken = params.get('access_token');
-
-  if (!accessToken) {
+  if (!urlHash) {
     document.getElementById('authenticate').style.display = 'block';
     document.getElementById('fileSelection').style.display = 'none';
   } else {
@@ -109,6 +100,8 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
     document.getElementById('fileSelection').style.display = 'block';
   }
 
+  const params = new URLSearchParams(urlHash);
+  const accessToken = params.get('access_token');
   if (!accessToken) return;
 
   document.getElementById('authenticate').style.display = 'none';
@@ -120,26 +113,29 @@ async function createTextPlaylist(accessToken, trackList, trackIds) {
 
     const gptSuggestions = await fetchGptSuggestions(chatInput);
     const trackList = extractTrackListFromGptSuggestion(gptSuggestions);
-    const trackIds = [];
 
-    for (const track of trackList) {
-      const trackId = await searchTrack(accessToken, track.artist, track.title);
-      if (trackId) {
-        trackIds.push(trackId);
+    await displayTextTracklist(trackList);
+
+    document.getElementById('createPlaylist').addEventListener('click', async () => {
+      const trackIds = [];
+
+      for (const track of trackList) {
+        const trackId = await searchTrack(accessToken, track.artist, track.title);
+        if (trackId) {
+          trackIds.push(trackId);
+        }
       }
-    }
 
-    const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
-      headers: { 'Authorization': `Bearer ${accessToken}` },
+      const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+
+      const userProfile = await userProfileResponse.json();
+      const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
+
+      // Open the generated playlist in a new window
+      window.open(playlistUrl, '_blank');
     });
-
-    const userProfile = await userProfileResponse.json();
-    const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-
-    // Call the createTextPlaylist function to render the text playlist
-    await createTextPlaylist(accessToken, trackList, trackIds);
-
-    // Open the generated playlist in a new window
-    window.open(playlistUrl, '_blank');
   });
 })();
+

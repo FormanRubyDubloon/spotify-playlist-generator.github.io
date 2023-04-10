@@ -6,21 +6,17 @@
   <title>Spotify Playlist Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
   <script src="app.js" defer></script>
-      <style>
-        #authenticate {
-            display: block;
-        }
-    </style>
 </head>
 <body>
-  <h1>Spotify Playlist Generator 3.1.5</h1>
+  <h1>Spotify Playlist Generator 4</h1>
   <button id="authenticate">Authenticate with Spotify</button>
   <div id="fileSelection" style="display: none;">
     <label for="chatInput">Enter your desired playlist:</label>
-    <input type="text" id="chatInput" name="chatInput">
+    <textarea type="text" id="chatInput" name="chatInput"></textarea>
     <button id="submitChatInput">Submit</button>
     <h2>Generated Text Playlist</h2>
-    <ul id="textPlaylist"></ul>
+    <ul id="gptTracklist"></ul>
+    <button id="createPlaylist" style="display: block;">Create Playlist</button>
   </div>
 </body>
 </html>
