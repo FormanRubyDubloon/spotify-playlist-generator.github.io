@@ -127,27 +127,28 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   } else {
     console.error('GPT Suggestions array is empty');
   }
+}); // <-- Move this closing parenthesis and curly brace up here
 
-  document.getElementById('createPlaylist').addEventListener('click', async () => {
-    const trackIds = [];
+document.getElementById('createPlaylist').addEventListener('click', async () => {
+  const trackIds = [];
 
-    for (const track of trackList) {
-      const trackId = await searchTrack(accessToken, track.artist, track.title);
-      if (trackId) {
-        trackIds.push(trackId);
-      }
+  for (const track of trackList) {
+    const trackId = await searchTrack(accessToken, track.artist, track.title);
+    if (trackId) {
+      trackIds.push(trackId);
     }
+  }
 
-    const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
-      headers: { 'Authorization': `Bearer ${accessToken}` },
-    });
-
-    const userProfile = await userProfileResponse.json();
-    const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-
-    // Open the generated playlist in a new window
-    window.open(playlistUrl, '_blank');
+  const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
+    headers: { 'Authorization': `Bearer ${accessToken}` },
   });
+
+  const userProfile = await userProfileResponse.json();
+  const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
+
+  // Open the generated playlist in a new window
+  window.open(playlistUrl, '_blank');
 });
+
 
 
