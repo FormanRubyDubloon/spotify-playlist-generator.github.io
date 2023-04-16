@@ -8,13 +8,14 @@
   <script src="app.js" defer></script>
 </head>
 <body>
-  <h1>Spotify Playlist Generator 5.0.10</h1>
+  <h1>Spotify Playlist Generator 5.2</h1>
   <button id="authenticate">Authenticate with Spotify</button>
   <div id="fileSelection" style="display: none;">
     <label for="chatInput">Enter your desired playlist:</label>
     <textarea type="text" id="chatInput" name="chatInput"></textarea>
     <button id="submitChatInput">Submit</button>
     <h2>Generated Text Playlist</h2>
+    <div id="rawGptSuggestion"></div>
     <ul id="textTracklist"></ul>
     <button id="createPlaylist" style="display: block;">Create Playlist</button>
   </div>
