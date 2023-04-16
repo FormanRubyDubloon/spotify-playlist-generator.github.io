@@ -99,7 +99,6 @@ async function createPlaylist(accessToken, userId, tracks) {
     document.getElementById('authenticate').style.display = 'none';
     document.getElementById('fileSelection').style.display = 'block';
   }
-
   const params = new URLSearchParams(urlHash);
   const accessToken = params.get('access_token');
   if (!accessToken) return;
@@ -107,10 +106,9 @@ async function createPlaylist(accessToken, userId, tracks) {
   document.getElementById('authenticate').style.display = 'none';
   document.getElementById('fileSelection').style.display = 'block';
 
+  const trackList = [];
 
-const trackList = []; 
-
-document.getElementById('submitChatInput').addEventListener('click', async () => {
+  document.getElementById('submitChatInput').addEventListener('click', async () => {
   const chatInput = document.getElementById('chatInput').value.trim();
   if (!chatInput) return;
 
@@ -149,3 +147,4 @@ document.getElementById('createPlaylist').addEventListener('click', async () => 
   // Open the generated playlist in a new window
   window.open(playlistUrl, '_blank');
 });
+})();
