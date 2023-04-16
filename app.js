@@ -115,8 +115,8 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   const gptSuggestions = await fetchGptSuggestions(chatInput);
   console.log('GPT Suggestions:', gptSuggestions); // Log GPT suggestions to inspect the structure
 
-  // Assuming the API response contains a property called 'suggestions'
-  const trackList = extractTrackListFromGptSuggestion(gptSuggestions.suggestions);
+  // Pass the first element of the gptSuggestions array to the function
+  const trackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
 
   await displayTextTracklist(trackList);
 
