@@ -108,6 +108,8 @@ async function createPlaylist(accessToken, userId, tracks) {
   document.getElementById('fileSelection').style.display = 'block';
 
 
+// ... (the rest of the code remains unchanged)
+
 document.getElementById('submitChatInput').addEventListener('click', async () => {
   const chatInput = document.getElementById('chatInput').value.trim();
   if (!chatInput) return;
@@ -115,31 +117,37 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   const gptSuggestions = await fetchGptSuggestions(chatInput);
   console.log('GPT Suggestions:', gptSuggestions); // Log GPT suggestions to inspect the structure
 
-  // Pass the first element of the gptSuggestions array to the function
-  const trackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
+  let trackList = [];
 
-  await displayTextTracklist(trackList);
+  if (gptSuggestions.length > 0) {
+    // Pass the first element of the gptSuggestions array to the function
+    trackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
+
+    await displayTextTracklist(trackList);
+  } else {
+    console.error('GPT Suggestions array is empty');
+  }
 
   document.getElementById('createPlaylist').addEventListener('click', async () => {
-      const trackIds = [];
+    const trackIds = [];
 
-      for (const track of trackList) {
-        const trackId = await searchTrack(accessToken, track.artist, track.title);
-        if (trackId) {
-          trackIds.push(trackId);
-        }
+    for (const track of trackList) {
+      const trackId = await searchTrack(accessToken, track.artist, track.title);
+      if (trackId) {
+        trackIds.push(trackId);
       }
+    }
 
-      const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
-        headers: { 'Authorization': `Bearer ${accessToken}` },
-      });
-
-      const userProfile = await userProfileResponse.json();
-      const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
-
-      // Open the generated playlist in a new window
-      window.open(playlistUrl, '_blank');
+    const userProfileResponse = await fetch('https://api.spotify.com/v1/me', {
+      headers: { 'Authorization': `Bearer ${accessToken}` },
     });
+
+    const userProfile = await userProfileResponse.json();
+    const playlistUrl = await createPlaylist(accessToken, userProfile.id, trackIds);
+
+    // Open the generated playlist in a new window
+    window.open(playlistUrl, '_blank');
   });
-})();
+});
+
 
