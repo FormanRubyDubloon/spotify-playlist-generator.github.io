@@ -107,16 +107,20 @@ async function createPlaylist(accessToken, userId, tracks) {
   document.getElementById('authenticate').style.display = 'none';
   document.getElementById('fileSelection').style.display = 'block';
 
-  document.getElementById('submitChatInput').addEventListener('click', async () => {
-    const chatInput = document.getElementById('chatInput').value.trim();
-    if (!chatInput) return;
 
-    const gptSuggestions = await fetchGptSuggestions(chatInput);
-    const trackList = extractTrackListFromGptSuggestion(gptSuggestions);
+document.getElementById('submitChatInput').addEventListener('click', async () => {
+  const chatInput = document.getElementById('chatInput').value.trim();
+  if (!chatInput) return;
 
-    await displayTextTracklist(trackList);
+  const gptSuggestions = await fetchGptSuggestions(chatInput);
+  console.log('GPT Suggestions:', gptSuggestions); // Log GPT suggestions to inspect the structure
 
-    document.getElementById('createPlaylist').addEventListener('click', async () => {
+  // Assuming the API response contains a property called 'suggestions'
+  const trackList = extractTrackListFromGptSuggestion(gptSuggestions.suggestions);
+
+  await displayTextTracklist(trackList);
+
+  document.getElementById('createPlaylist').addEventListener('click', async () => {
       const trackIds = [];
 
       for (const track of trackList) {
