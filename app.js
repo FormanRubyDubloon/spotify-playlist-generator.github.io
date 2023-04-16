@@ -108,7 +108,7 @@ async function createPlaylist(accessToken, userId, tracks) {
   document.getElementById('fileSelection').style.display = 'block';
 
 
-// ... (the rest of the code remains unchanged)
+const trackList = []; 
 
 document.getElementById('submitChatInput').addEventListener('click', async () => {
   const chatInput = document.getElementById('chatInput').value.trim();
@@ -117,17 +117,17 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   const gptSuggestions = await fetchGptSuggestions(chatInput);
   console.log('GPT Suggestions:', gptSuggestions); // Log GPT suggestions to inspect the structure
 
-  let trackList = [];
-
   if (gptSuggestions.length > 0) {
     // Pass the first element of the gptSuggestions array to the function
-    trackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
+    const newTrackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
+    trackList.length = 0; // Clear the existing trackList
+    trackList.push(...newTrackList); // Add new tracks to the trackList
 
     await displayTextTracklist(trackList);
   } else {
     console.error('GPT Suggestions array is empty');
   }
-}); // <-- Move this closing parenthesis and curly brace up here
+});
 
 document.getElementById('createPlaylist').addEventListener('click', async () => {
   const trackIds = [];
@@ -149,6 +149,3 @@ document.getElementById('createPlaylist').addEventListener('click', async () => 
   // Open the generated playlist in a new window
   window.open(playlistUrl, '_blank');
 });
-
-
-
