@@ -52,16 +52,22 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
-async function displayTextTracklist(suggestions) {
-  const tracklistElement = document.getElementById('textTracklist');
-  tracklistElement.innerHTML = '';
+async function displayTextTracklist(gptSuggestions) {
+  const textTracklist = document.getElementById('textTracklist');
+  textTracklist.innerHTML = '';
 
-  for (const suggestion of suggestions) {
-    const listItem = document.createElement('li');
-    listItem.textContent = `${suggestion.artist} - ${suggestion.title}`;
-    tracklistElement.appendChild(listItem);
-  }
+  const formattedSuggestions = gptSuggestions[0].split('\n').filter(line => line.trim());
+
+  formattedSuggestions.forEach((suggestion) => {
+    const li = document.createElement('li');
+    const suggestionParts = suggestion.split(/"(.+?)"/);
+    const title = suggestionParts[1];
+    const artist = suggestionParts[2].trim().slice(1);
+    li.textContent = `${title} - ${artist}`;
+    textTracklist.appendChild(li);
+  });
 }
+
 
 async function searchTrack(accessToken, artist, title) {
   const query = encodeURIComponent(`artist:${artist} track:${title}`);
