@@ -56,17 +56,17 @@ async function displayTextTracklist(gptSuggestions) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
-  const formattedSuggestions = gptSuggestions[0].split('\n').filter(line => line.trim());
+  const rawResponse = gptSuggestions[0];
 
-  formattedSuggestions.forEach((suggestion) => {
+  const lines = rawResponse.split('\n').filter(line => line.trim());
+
+  lines.forEach((line) => {
     const li = document.createElement('li');
-    const suggestionParts = suggestion.split(/"(.+?)"/);
-    const title = suggestionParts[1];
-    const artist = suggestionParts[2].trim().slice(1);
-    li.textContent = `${title} - ${artist}`;
+    li.textContent = line.trim();
     textTracklist.appendChild(li);
   });
 }
+
 
 
 async function searchTrack(accessToken, artist, title) {
