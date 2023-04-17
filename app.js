@@ -140,7 +140,6 @@ submitChatInput.addEventListener('click', async () => {
 
 
 
-
 document.getElementById('createPlaylist').addEventListener('click', async () => {
   const trackIds = [];
 
