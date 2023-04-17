@@ -123,7 +123,7 @@ submitChatInput.addEventListener('click', async () => {
   const gptSuggestions = await fetchGptSuggestions(prompt);
   console.log('GPT Suggestions:', gptSuggestions);
 
-  const songSuggestions = gptSuggestions.split('\n').filter((line) => line.trim() !== '');
+  const songSuggestions = gptSuggestions[0].split('\n').filter((line) => line.trim() !== '');
 
   textTracklist.innerHTML = '';
 
@@ -137,6 +137,7 @@ submitChatInput.addEventListener('click', async () => {
     }
   });
 });
+
 
 
 
