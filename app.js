@@ -128,11 +128,11 @@ submitChatInput.addEventListener('click', async () => {
   textTracklist.innerHTML = '';
 
   songSuggestions.forEach((song) => {
-    const matches = song.match(/^(\d+)\.\s"(.+)"\s-\s(.+)$/);
+    const matches = song.match(/^\d+\.\s"(.+)"\s-\s(.+)$/);
 
     if (matches) {
       const li = document.createElement('li');
-      li.textContent = `${matches[2]} - ${matches[3]}`;
+      li.textContent = `${matches[1]} - ${matches[2]}`;
       textTracklist.appendChild(li);
     }
   });
