@@ -19,7 +19,7 @@ async function fetchGptSuggestions(prompt) {
   });
 
   const data = await response.json();
-  return data;
+  return data.suggestions; // Assuming 'suggestions' is the key in the returned JSON
 }
 
 function extractTrackListFromGptSuggestion(suggestion) {
@@ -42,13 +42,13 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
-async function displayTextTracklist(trackList) {
+async function displayTextTracklist(suggestions) {
   const tracklistElement = document.getElementById('textTracklist');
   tracklistElement.innerHTML = '';
 
-  for (const track of trackList) {
+  for (const suggestion of suggestions) {
     const listItem = document.createElement('li');
-    listItem.textContent = `${track.artist} - ${track.title}`;
+    listItem.textContent = `${suggestion.artist} - ${suggestion.title}`;
     tracklistElement.appendChild(listItem);
   }
 }
@@ -108,24 +108,20 @@ async function createPlaylist(accessToken, userId, tracks) {
 
   const trackList = [];
 
-  document.getElementById('submitChatInput').addEventListener('click', async () => {
+document.getElementById('submitChatInput').addEventListener('click', async () => {
   const chatInput = document.getElementById('chatInput').value.trim();
   if (!chatInput) return;
 
-  const gptSuggestions = await fetchGptSuggestions(chatInput);
-  console.log('GPT Suggestions:', gptSuggestions); // Log GPT suggestions to inspect the structure
+  const suggestions = await fetchGptSuggestions(chatInput);
+  console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
-  if (gptSuggestions.length > 0) {
-    // Pass the first element of the gptSuggestions array to the function
-    const newTrackList = extractTrackListFromGptSuggestion(gptSuggestions[0]);
-    trackList.length = 0; // Clear the existing trackList
-    trackList.push(...newTrackList); // Add new tracks to the trackList
-
-    await displayTextTracklist(trackList);
+  if (suggestions.length > 0) {
+    await displayTextTracklist(suggestions);
   } else {
     console.error('GPT Suggestions array is empty');
   }
 });
+
 
 document.getElementById('createPlaylist').addEventListener('click', async () => {
   const trackIds = [];
