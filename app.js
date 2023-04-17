@@ -19,8 +19,11 @@ async function fetchGptSuggestions(prompt) {
   });
 
   const data = await response.json();
-  return data.suggestions; // Assuming 'suggestions' is the key in the returned JSON
+  console.log('API Response:', data); // Log the API response
+  const messageContent = data.choices[0].message.content;
+  return messageContent;
 }
+
 
 function extractTrackListFromGptSuggestion(suggestion) {
   const lines = suggestion.split('\n');
