@@ -21,8 +21,8 @@ async function fetchGptSuggestions(prompt) {
   const data = await response.json();
   console.log('API Response:', data); // Log the API response
   
-  if (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content) {
-    const messageContent = data.choices[0].message.content;
+  if (data.length > 0) {
+    const messageContent = data[0];
     return messageContent;
   } else {
     console.error('Error: Invalid API response format');
