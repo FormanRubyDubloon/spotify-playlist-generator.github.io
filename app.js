@@ -124,27 +124,20 @@ async function createPlaylist(accessToken, userId, tracks) {
 
   const trackList = [];
 
-submitChatInput.addEventListener('click', async () => {
-  const prompt = chatInput.value;
-  const gptSuggestions = await fetchGptSuggestions(prompt);
-  console.log('GPT Suggestions:', gptSuggestions);
 
-  const songSuggestions = gptSuggestions[0].split('\n').filter((line) => line.trim() !== '');
+document.getElementById('submitChatInput').addEventListener('click', async () => {
+  const chatInput = document.getElementById('chatInput').value.trim();
+  if (!chatInput) return;
 
-  textTracklist.innerHTML = '';
+  const suggestions = await fetchGptSuggestions(chatInput);
+  console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
-  songSuggestions.forEach((song) => {
-    const matches = song.match(/^\d+\.\s"(.+)"\s-\s(.+)$/);
-
-    if (matches) {
-      const li = document.createElement('li');
-      li.textContent = `${matches[1]} - ${matches[2]}`;
-      textTracklist.appendChild(li);
-    }
-  });
+  if (suggestions.length > 0) {
+    await displayTextTracklist(suggestions);
+  } else {
+    console.error('GPT Suggestions array is empty');
+  }
 });
-
-
 
 document.getElementById('createPlaylist').addEventListener('click', async () => {
   const trackIds = [];
