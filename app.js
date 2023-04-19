@@ -52,26 +52,23 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
-async function displayTextTracklist(gptSuggestions) {
+function displayTracklist(apiResponse) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
-  const rawResponse = gptSuggestions[0];
-  const lines = rawResponse.match(/[^\r\n]+/g) || [];
-
-  console.log('Raw response:', rawResponse); // Debug log
-  console.log('Lines:', lines); // Debug log
+  const cleanedResponse = apiResponse.replace(/^\s+|\s+$/g, '');
+  const lines = cleanedResponse.split('\n');
 
   lines.forEach((line) => {
     const trimmedLine = line.trim();
     if (trimmedLine) {
-      console.log('Adding line:', trimmedLine); // Debug log
       const li = document.createElement('li');
       li.textContent = trimmedLine;
       textTracklist.appendChild(li);
     }
   });
 }
+
 
 
 
@@ -140,13 +137,12 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
   if (suggestions.length > 0) {
-    console.log('Calling displayTextTracklist with:', suggestions); // Debug log
-
-    await displayTextTracklist(suggestions);
+    displayTracklist(suggestions[0]);
   } else {
     console.error('GPT Suggestions array is empty');
   }
 });
+
 
 document.getElementById('createPlaylist').addEventListener('click', async () => {
   const trackIds = [];
