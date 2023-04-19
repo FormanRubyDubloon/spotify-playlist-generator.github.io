@@ -57,7 +57,10 @@ async function displayTextTracklist(apiResponse) {
   textTracklist.innerHTML = '';
 
   const rawResponse = apiResponse[0];
+  console.log('Raw response:', rawResponse); // Debug log
+
   const lines = rawResponse.split('\n');
+  console.log('Lines:', lines); // Debug log
 
   lines.forEach((line) => {
     const trimmedLine = line.trim();
@@ -68,6 +71,7 @@ async function displayTextTracklist(apiResponse) {
     }
   });
 }
+
 
 
 
