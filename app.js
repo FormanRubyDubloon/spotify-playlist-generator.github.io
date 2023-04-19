@@ -52,20 +52,37 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
-async function displayTextTracklist(apiResponse) {
-  const textTracklist = document.getElementById('textTracklist');
-  textTracklist.innerHTML = '';
 
+function processApiResponse(apiResponse) {
   const responseString = apiResponse[0];
   const lines = responseString.split('\n').filter(line => line.trim());
 
-  lines.forEach((line) => {
+  const processedLines = lines.map(line => {
+    const match = line.match(/^\d+\. "(.+?)" by (.+)$/);
+    if (match) {
+      const title = match[1].trim();
+      const artist = match[2].trim();
+      return `${title} - ${artist}`;
+    }
+    return line;
+  });
+
+  return processedLines;
+}
+
+
+
+
+function displayTextTracklist(tracklist) {
+  const textTracklist = document.getElementById('textTracklist');
+  textTracklist.innerHTML = '';
+
+  tracklist.forEach((line) => {
     const li = document.createElement('li');
-    li.textContent = line.trim();
+    li.textContent = line;
     textTracklist.appendChild(li);
   });
 }
-
 
 
 
@@ -135,11 +152,13 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
   if (suggestions.length > 0) {
-    await displayTextTracklist(suggestions);
+    const tracklist = processApiResponse(suggestions);
+    displayTextTracklist(tracklist);
   } else {
     console.error('GPT Suggestions array is empty');
   }
 });
+
 
 
 
