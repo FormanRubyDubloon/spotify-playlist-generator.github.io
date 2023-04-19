@@ -57,7 +57,7 @@ async function displayTextTracklist(gptSuggestions) {
   textTracklist.innerHTML = '';
 
   const rawResponse = gptSuggestions[0];
-  const lines = rawResponse.split('\n');
+  const lines = rawResponse.match(/[^\r\n]+/g) || [];
 
   console.log('Raw response:', rawResponse); // Debug log
   console.log('Lines:', lines); // Debug log
