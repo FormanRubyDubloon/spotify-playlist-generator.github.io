@@ -132,7 +132,7 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   if (!chatInput) return;
 
   const suggestions = await fetchGptSuggestions(chatInput);
-  console.log('GPT Suggestions:', suggestions);
+  console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
   if (suggestions.length > 0) {
     await displayTextTracklist(suggestions);
@@ -140,6 +140,7 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
     console.error('GPT Suggestions array is empty');
   }
 });
+
 
 
 
