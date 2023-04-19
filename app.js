@@ -57,17 +57,19 @@ async function displayTextTracklist(gptSuggestions) {
   textTracklist.innerHTML = '';
 
   const rawResponse = gptSuggestions[0];
-
-  const lines = rawResponse.split('\\n').filter(line => line.trim());
+  const lines = rawResponse.split('\n');
 
   console.log('Raw response:', rawResponse); // Debug log
-  console.log('Filtered lines:', lines); // Debug log
+  console.log('Lines:', lines); // Debug log
 
   lines.forEach((line) => {
-    console.log('Adding line:', line); // Debug log
-    const li = document.createElement('li');
-    li.textContent = line.trim();
-    textTracklist.appendChild(li);
+    const trimmedLine = line.trim();
+    if (trimmedLine) {
+      console.log('Adding line:', trimmedLine); // Debug log
+      const li = document.createElement('li');
+      li.textContent = trimmedLine;
+      textTracklist.appendChild(li);
+    }
   });
 }
 
