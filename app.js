@@ -56,19 +56,13 @@ async function displayTextTracklist(apiResponse) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
-  const rawResponse = apiResponse[0];
-  console.log('Raw response:', rawResponse); // Debug log
-
-  const lines = rawResponse.split('\n');
-  console.log('Lines:', lines); // Debug log
+  const responseString = apiResponse[0];
+  const lines = responseString.split('\n').filter(line => line.trim());
 
   lines.forEach((line) => {
-    const trimmedLine = line.trim();
-    if (trimmedLine) {
-      const li = document.createElement('li');
-      li.textContent = trimmedLine;
-      textTracklist.appendChild(li);
-    }
+    const li = document.createElement('li');
+    li.textContent = line.trim();
+    textTracklist.appendChild(li);
   });
 }
 
