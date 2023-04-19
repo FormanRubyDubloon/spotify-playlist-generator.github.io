@@ -53,17 +53,24 @@ function extractTrackListFromGptSuggestion(suggestion) {
 }
 
 async function displayTextTracklist(gptSuggestions) {
+
+  console.log('displayTextTracklist called with:', gptSuggestions); // Debug log
+
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
   console.log('displayTextTracklist called with:', gptSuggestions); // Debug log
 
-
   const rawResponse = gptSuggestions[0];
+
+  console.log('Raw response:', rawResponse); // Debug log
 
   const lines = rawResponse.split('\n').filter(line => line.trim());
 
+  console.log('Filtered lines:', lines); // Debug log
+
   lines.forEach((line) => {
+
     console.log('Adding line:', line); // Debug log
 
     const li = document.createElement('li');
