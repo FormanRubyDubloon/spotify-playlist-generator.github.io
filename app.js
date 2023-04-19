@@ -56,11 +56,16 @@ async function displayTextTracklist(gptSuggestions) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
+  console.log('displayTextTracklist called with:', gptSuggestions); // Debug log
+
+
   const rawResponse = gptSuggestions[0];
 
   const lines = rawResponse.split('\n').filter(line => line.trim());
 
   lines.forEach((line) => {
+    console.log('Adding line:', line); // Debug log
+
     const li = document.createElement('li');
     li.textContent = line.trim();
     textTracklist.appendChild(li);
