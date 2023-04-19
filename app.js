@@ -52,12 +52,12 @@ function extractTrackListFromGptSuggestion(suggestion) {
   return trackList;
 }
 
-function displayTracklist(apiResponse) {
+async function displayTextTracklist(apiResponse) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
-  const cleanedResponse = apiResponse.replace(/^\s+|\s+$/g, '');
-  const lines = cleanedResponse.split('\n');
+  const rawResponse = apiResponse[0];
+  const lines = rawResponse.split('\n');
 
   lines.forEach((line) => {
     const trimmedLine = line.trim();
@@ -134,14 +134,15 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   if (!chatInput) return;
 
   const suggestions = await fetchGptSuggestions(chatInput);
-  console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
+  console.log('GPT Suggestions:', suggestions);
 
   if (suggestions.length > 0) {
-    displayTracklist(suggestions[0]);
+    await displayTextTracklist(suggestions);
   } else {
     console.error('GPT Suggestions array is empty');
   }
 });
+
 
 
 document.getElementById('createPlaylist').addEventListener('click', async () => {
