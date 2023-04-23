@@ -11,7 +11,7 @@ document.getElementById('authenticate').addEventListener('click', onAuthenticate
 
 async function fetchGptSuggestions(prompt) {
   // Include the schema in the prompt text
-  const schemaExample = ` Provide your answer in JSON form. Reply with only the answer in JSON form and include no other commentary`;
+  const schemaExample = `Reply with only the answer in JSON form and include no other commentary`;
 
   const fullPrompt = `${prompt}${schemaExample}`;
 
