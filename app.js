@@ -71,13 +71,15 @@ function processApiResponse(apiResponse) {
 }
 
 
-async function displayTextTracklist(gptSuggestions) {
-  if (!gptSuggestions) {
-    console.error('GPT Suggestions is undefined');
-    return;
-  }
+async function displayTextTracklist(rawResponse) {
+  const ulElement = createUnderlinedList(JSON.stringify([rawResponse]));
+  const textTracklist = document.getElementById('textTracklist');
+  textTracklist.innerHTML = '';
+  textTracklist.appendChild(ulElement);
+}
 
-  const jsonString = JSON.stringify(gptSuggestions);
+
+function createUnderlinedList(jsonString) {
   const data = JSON.parse(jsonString);
   const text = data[0];
   const lines = text.split('\n');
@@ -94,12 +96,8 @@ async function displayTextTracklist(gptSuggestions) {
     }
   });
 
-  const textTracklist = document.getElementById('textTracklist');
-  textTracklist.innerHTML = '';
-  textTracklist.appendChild(ul);
+  return ul;
 }
-
-
 
 
 
