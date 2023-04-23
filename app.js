@@ -11,21 +11,7 @@ document.getElementById('authenticate').addEventListener('click', onAuthenticate
 
 async function fetchGptSuggestions(prompt) {
   // Include the schema in the prompt text
-  const schemaExample = ` Format the entire response in JSON string. Example response for 2 songs:
-  [
-  {
-    "playlist": {
-      "track1": {
-        "artist": "The Beatles",
-        "song": "Yellow Submarine"
-      },
-      "track2": {
-        "artist": "Madonna",
-        "song": "Like a Virgin"
-      }
-    }
-  }
-]`;
+  const schemaExample = ` Provide your answer in JSON form. Reply with only the answer in JSON form and include no other commentary`;
 
   const fullPrompt = `${prompt}${schemaExample}`;
 
