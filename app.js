@@ -12,20 +12,20 @@ document.getElementById('authenticate').addEventListener('click', onAuthenticate
 async function fetchGptSuggestions(prompt) {
   // Include the schema in the prompt text
   const schemaExample = ` Format the entire response in JSON string. Example response for 2 songs:
-  [{
-      "playlist": {
-          "track1": {
-              "artist": "The Beatles",
-              "song": "Yellow Submarine",
-              }
-          },
-          "track2": {
-              "artist": "Madonna",
-              "song": "Like a Virgin",
-              }
-          }
+  [
+  {
+    "playlist": {
+      "track1": {
+        "artist": "The Beatles",
+        "song": "Yellow Submarine"
+      },
+      "track2": {
+        "artist": "Madonna",
+        "song": "Like a Virgin"
       }
-  }]`;
+    }
+  }
+]`;
 
   const fullPrompt = `${prompt}${schemaExample}`;
 
