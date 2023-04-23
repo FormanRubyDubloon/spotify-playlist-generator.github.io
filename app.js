@@ -168,8 +168,7 @@ document.getElementById('submitChatInput').addEventListener('click', async () =>
   console.log('GPT Suggestions:', suggestions); // Log GPT suggestions to inspect the structure
 
   if (suggestions.length > 0) {
-    const tracklist = processApiResponse(suggestions);
-    displayTextTracklist(tracklist);
+    await displayTextTracklist(suggestions);
   } else {
     console.error('GPT Suggestions array is empty');
   }
