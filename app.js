@@ -72,16 +72,27 @@ function processApiResponse(apiResponse) {
 
 
 
+async function displayTextTracklist(gptSuggestions) {
+  const jsonString = JSON.stringify(gptSuggestions);
+  const data = JSON.parse(jsonString);
+  const text = data[0];
+  const lines = text.split('\n');
+  const ul = document.createElement('ul');
 
-function displayTextTracklist(tracklist) {
+  lines.forEach(line => {
+    const match = line.match(/(\d+\.\s)(.+)( - .+)/);
+    if (match) {
+      const li = document.createElement('li');
+      const u = document.createElement('u');
+      u.textContent = match[2] + match[3];
+      li.appendChild(u);
+      ul.appendChild(li);
+    }
+  });
+
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
-
-  tracklist.forEach((line) => {
-    const li = document.createElement('li');
-    li.textContent = line;
-    textTracklist.appendChild(li);
-  });
+  textTracklist.appendChild(ul);
 }
 
 
