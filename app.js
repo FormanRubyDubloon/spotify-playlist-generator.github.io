@@ -72,11 +72,25 @@ function processApiResponse(apiResponse) {
 
 
 async function displayTextTracklist(rawResponse) {
-  const ulElement = createUnderlinedList(JSON.stringify([rawResponse]));
+  const lines = rawResponse.split('\n');
+  const ul = document.createElement('ul');
+
+  lines.forEach(line => {
+    const match = line.match(/(\d+\.\s)(.+)( - .+)/);
+    if (match) {
+      const li = document.createElement('li');
+      const u = document.createElement('u');
+      u.textContent = match[2] + match[3];
+      li.appendChild(u);
+      ul.appendChild(li);
+    }
+  });
+
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
-  textTracklist.appendChild(ulElement);
+  textTracklist.appendChild(ul);
 }
+
 
 
 function createUnderlinedList(jsonString) {
