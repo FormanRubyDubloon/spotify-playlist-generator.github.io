@@ -71,8 +71,12 @@ function processApiResponse(apiResponse) {
 }
 
 
-
 async function displayTextTracklist(gptSuggestions) {
+  if (!gptSuggestions) {
+    console.error('GPT Suggestions is undefined');
+    return;
+  }
+
   const jsonString = JSON.stringify(gptSuggestions);
   const data = JSON.parse(jsonString);
   const text = data[0];
@@ -94,6 +98,7 @@ async function displayTextTracklist(gptSuggestions) {
   textTracklist.innerHTML = '';
   textTracklist.appendChild(ul);
 }
+
 
 
 
