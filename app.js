@@ -10,17 +10,12 @@ function onAuthenticateButtonClick() {
 document.getElementById('authenticate').addEventListener('click', onAuthenticateButtonClick);
 
 async function fetchGptSuggestions(prompt) {
-  // Include the schema in the prompt text
-  const schemaExample = `Reply with only the answer in JSON form and include no other commentary`;
-
-  const fullPrompt = `${prompt}${schemaExample}`;
-
   const response = await fetch('https://4bru83i736.execute-api.us-east-1.amazonaws.com/prod/gpt-suggestions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ prompt: fullPrompt }),
+    body: JSON.stringify({ prompt }),
   });
 
   const data = await response.json();
@@ -34,7 +29,6 @@ async function fetchGptSuggestions(prompt) {
     return '';
   }
 }
-
 
 
 
@@ -79,24 +73,16 @@ function processApiResponse(apiResponse) {
 
 
 
-async function displayTextTracklist(gptSuggestions) {
+function displayTextTracklist(tracklist) {
   const textTracklist = document.getElementById('textTracklist');
   textTracklist.innerHTML = '';
 
-  // Parse the JSON string to an object
-  const jsonResponse = JSON.parse(gptSuggestions);
-
-  // Iterate through the playlist object
-  for (const track in jsonResponse[0].playlist) {
-    const artist = jsonResponse[0].playlist[track].artist;
-    const song = jsonResponse[0].playlist[track].song;
-
+  tracklist.forEach((line) => {
     const li = document.createElement('li');
-    li.textContent = `${artist} - ${song}`;
+    li.textContent = line;
     textTracklist.appendChild(li);
-  }
+  });
 }
-
 
 
 
